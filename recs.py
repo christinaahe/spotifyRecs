@@ -1,27 +1,35 @@
-#from neo4j import GraphDatabase
+# from neo4j import GraphDatabase
 import subprocess
 import random
 import os
+from spotify_objects import Song
+import pandas as pd
 
 
-lines = open('spotify.csv').readlines()
-random.shuffle(lines)
+#lines = open('spotify.csv').readlines()
+#random.shuffle(lines)
 
-#open('sample.csv', 'w').writelines(lines[:10000])
+
+# open('sample.csv', 'w').writelines(lines[:10000])
+
+
+def make_edge_csv(node_file)
+    df = pd.read_csv(node_file)
+
+    # dict = {'from': [list of song_ids], 'to': [list of song ids], 'sim_score': [list of song sim scores]}}
+
+
 
 def egrep_exp(artist, song):
-    # egrep '.*,.*,Ben Woodward,.*,Ghost - Acoustic,.*' spotify.csv
     return "(.*,.*," + artist + ",.*," + song + ",.*)"
+
 
 def full_egrep_exp(artists, songs):
     return "|".join([egrep_exp(artists[i], songs[i]) for i in range(len(artists))])
 
 
 def extract_songs(songs, artists):
-    files=[]
-    subprocess.check_output('rm -f pre_sample.csv', shell=True)
-    subprocess.check_output('rm -f songs.csv', shell=True)
-
+    #subprocess.check_output('rm -f combo_sample.csv', shell=True)
 
     regex = full_egrep_exp(artists, songs)
     cmd = "tail -n +2 spotify.csv | egrep -v '" + regex + "' | sort -t, -k3,3 -k5,5 -u > pre_sample.csv"
@@ -35,6 +43,9 @@ def extract_songs(songs, artists):
 
     cat_cmd = 'cat sample.csv songs.csv > combo_sample.csv'
     subprocess.check_output(cat_cmd, shell=True)
+    subprocess.check_output('rm -f pre_sample.csv', shell=True)
+    subprocess.check_output('rm -f sample.csv', shell=True)
+    subprocess.check_output('rm -f songs.csv', shell=True)
 
 
 def _count_gen(reader):
@@ -64,9 +75,7 @@ def raw_gen_count(filename):
     return sum(buf.count(b'\n') for buf in infile_gen)
 
 
-
 def main():
-    print(raw_gen_count('spotify.csv'))
     songs = ['The Call', "Two Birds", "Samson"]
     artists = ['Regina Spektor'] * len(songs)
     extract_songs(songs, artists)
