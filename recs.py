@@ -7,46 +7,34 @@ import os
 lines = open('spotify.csv').readlines()
 random.shuffle(lines)
 
-open('sample.csv', 'w').writelines(lines[:10000])
+#open('sample.csv', 'w').writelines(lines[:10000])
+
+def egrep_exp(artist, song):
+    # egrep '.*,.*,Ben Woodward,.*,Ghost - Acoustic,.*' spotify.csv
+    return "(.*,.*," + artist + ",.*," + song + ",.*)"
+
+def full_egrep_exp(artists, songs):
+    return "|".join([egrep_exp(artists[i], songs[i]) for i in range(len(artists))])
 
 
 def extract_songs(songs, artists):
     files=[]
+    subprocess.check_output('rm -f pre_sample.csv', shell=True)
+    subprocess.check_output('rm -f songs.csv', shell=True)
 
-    cmd = "cp spotify.csv ./copy.csv"
+
+    regex = full_egrep_exp(artists, songs)
+    cmd = "tail -n +2 spotify.csv | egrep -v '" + regex + "' | sort -t, -k3,3 -k5,5 -u > pre_sample.csv"
     subprocess.check_output(cmd, shell=True)
-    seps = '","'.join(["$" + str(i) for i in range(6, 21)])
-    cmd = 'awk -F, "{print $3","$5","$1","$2","$4","' + seps + '"}" OFS=, spotify.csv > tmp && mv tmp spotify.csv'
+
+    cmd = "egrep '" + regex + "' spotify.csv | sort -t, -k3,3 -k5,5 -u > songs.csv"
     subprocess.check_output(cmd, shell=True)
-    for i in range(len(songs)):
 
-        # puts song in separate csv file labeled song(i).csv
-        command = "awk -F ',' '{if ($5==" + '"' + songs[i] + '"' + " && $3==" + '"' + artists[i] + '"' + \
-                  ") print}' copy.csv > song" + str(i) + ".csv"
-        subprocess.check_output(command, shell=True)
-        cmd = "head -n 1 song" + str(i) + ".csv"
-        line = subprocess.check_output(cmd, shell=True).decode("utf-8").strip()
-        print(line)
-
-        
-        # adds file name to files list
-        files.append("song" + str(i) + ".csv")
-
-        # command to remove song from original file
-        #rm_cmd = "awk -F ',' '!($5 == " + '"' + songs[i] + '"' + ")' spotify.csv > spotify" + str(i) + ".csv"
-        #rm_cmd = "sed -i '/.*,.*,'" + artists[i] + "',.*,'" + songs[i] + "',.*$/d' copy.csv"
-
-        rm_cmd = "sed -i '' '/^" + artists[i] + "," + songs[i]+ "/d' data.csv"
-        subprocess.check_output(rm_cmd, shell=True)
-
-    sample_cmd = 'shuf -n 10000 copy.csv > sample.csv'
+    sample_cmd = 'shuf -n 10000 pre_sample.csv > sample.csv'
     subprocess.check_output(sample_cmd, shell=True)
 
-    cat_cmd = 'cat ' + ' '.join(files) + ' sample.csv'
-    rm_cmd = 'rm copy.csv'
+    cat_cmd = 'cat sample.csv songs.csv > combo_sample.csv'
     subprocess.check_output(cat_cmd, shell=True)
-    subprocess.check_output(rm_cmd, shell=True)
-
 
 
 def _count_gen(reader):
@@ -78,7 +66,7 @@ def raw_gen_count(filename):
 
 
 def main():
-
+    print(raw_gen_count('spotify.csv'))
     songs = ['The Call', "Two Birds", "Samson"]
     artists = ['Regina Spektor'] * len(songs)
     extract_songs(songs, artists)
