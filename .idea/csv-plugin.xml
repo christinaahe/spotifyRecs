@@ -17,6 +17,20 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/final.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/head.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/pre_sample.csv">
           <value>
             <Attribute>

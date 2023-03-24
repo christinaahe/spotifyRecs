@@ -1,13 +1,14 @@
-42361,72lOk8m2kS4E0duEMl7Viv,Iron Lung,Life. Iron Lung. Death.,Cauterization,15,58426,FALSE,0.274,0.982,2,-5.37,1,0.227,8.30E-05,0.747,0.165,0.0808,138.143,4,grindcore
-61367,7cLBuTgnDqzcxUZ3ZUn5lw,AKB48,Teacher Teacher <劇場盤>,蜂の巣ダンス(Team 8),23,248264,FALSE,0.666,0.976,0,-1.514,1,0.143,0.483,0,0.286,0.775,136.916,4,j-idol
-74834,2pkBfMJqLNvJoFsEXmgoJI,Roberto Carlos,Roberto Carlos (1978 Remasterizado),Força Estranha - Versão Remasterizada,39,229360,FALSE,0.617,0.762,9,-5.19,0,0.0334,0.604,0,0.0815,0.732,122.457,4,mpb
-63395,61AntWTmkmJQtsAmvikHRl,BARBEE BOYS,蜂 -BARBEE BOYS Complete Single Collection-,chibi,37,249466,FALSE,0.651,0.762,9,-8.6,1,0.0282,0.0163,0,0.292,0.765,125.9,4,j-rock
-5790,60NNjFuigXAbCPftSfM1NW,BiSH,GOiNG TO DESTRUCTiON,BROKEN,35,267547,FALSE,0.385,0.925,0,-5.48,1,0.0762,1.03E-05,0.253,0.155,0.435,174.125,4,anime
-96642,6zRGWlUGCyaggrLWaMjTvw,Samba De Raiz,Samba de Raiz - Ao Vivo,Sorriso Aberto - Ao Vivo,37,233693,FALSE,0.476,0.818,8,-10.282,1,0.241,0.46,2.03E-06,0.944,0.868,123.273,4,samba
-41528,5zXmmsW8ql2caDaABBB4mr,Lacuna Coil,The Eps- Lacuna Coil/halflife,No Need To Explain,22,219786,FALSE,0.417,0.819,2,-4.853,0,0.0299,1.25E-05,0.0223,0.0948,0.185,101.973,4,goth
-39328,1IwUhWG4Cp5808qsErE7PU,Hans Zimmer;Lisa Gerrard;Gavin Greenaway;The Lyndhurst Orchestra,Hans Zimmer: Epic Scores,"Busy Little Bee - From ""Gladiator"" Soundtrack",18,227800,FALSE,0.109,0.0857,1,-27.12,1,0.0395,0.723,0.294,0.131,0.0353,81.885,4,german
-106782,399AXrAg6KVCHxJrKW1DM5,Tomas Andersson Wij,Åskan i hjärtat,Himlen hit,35,210512,FALSE,0.535,0.457,4,-10.883,0,0.0306,0.271,0.0525,0.0837,0.402,132.022,4,swedish
-17371,6RJiY28t9jWpdy1JkUhNgK,Arca,KiCk i,Mequetrefe,49,140742,FALSE,0.674,0.823,0,-8.654,1,0.202,0.0199,1.25E-05,0.666,0.673,94.118,4,club
+,track_id,artists,album_name,track_name,popularity,duration_ms,explicit,danceability,energy,key,loudness,mode,speechiness,acousticness,instrumentalness,liveness,valence,tempo,time_signature,track_genre
+48593,0SWcUpvp1XvKDKJAcOqDNl,Dead Fish,Ponto Cego,Descendo As Escadas,31,226979,FALSE,0.432,0.959,11,-5.095,1,0.0522,0.000358,0,0.104,0.637,92.122,4,hardcore
+7548,1qrp8PDu28yMFOItAOynx3,Alison Krauss & Union Station,Live,"But You Know I Love You - Live From The Louisville Palace, Kentucky / 2002",23,219826,FALSE,0.463,0.428,2,-10.427,1,0.0419,0.608,0,0.969,0.491,129.548,4,bluegrass
+104179,51UB3HmLDQlH7I7yXJBqkq,Jah Nattoh,Solo para Ti,Cuando Tu No Estas,35,243497,FALSE,0.645,0.753,9,-2.698,0,0.0326,0.451,0,0.219,0.786,146.018,4,spanish
+58215,0Hxty2K8F2DrrCXQyQVpBo,Dope,Felons and Revolutionaries,You Spin Me Round (Like A Record),62,163666,FALSE,0.602,0.876,11,-5.212,1,0.0442,0.000122,7.16E-06,0.108,0.713,128.563,4,industrial
+105740,0hjAMjQvYeC6RHmrCEy9z5,Matt Large,Piano For Painkillers,Come Full Circle,9,186000,FALSE,0.583,0.745,6,-6.726,0,0.0429,0.411,0.833,0.153,0.731,172.092,4,study
+101538,0jZmx4t0Fg4SJxJj0jnAdU,White Noise Sleep Sounds,Soothing White Noise,White Noise - Loopable With No Fade,37,74217,FALSE,0,0.00332,10,-49.307,0,0,0.91,0.849,0.101,0,0,0,sleep
+60290,59yBn1TCeZLaDM5C9qoE2S,Vybz Kartel,Kingston Story (Deluxe Edition),My Crew,24,222229,FALSE,0.806,0.851,11,-5.03,0,0.0508,0.544,9.05E-06,0.127,0.84,141.022,4,j-dance
+66288,2XySnpJ0uMOJ4pXd73Juyf,Childrens DJ's,"Childrens Songs, Stories, Lullabies and Nursery Rhymes",Chicken Dance,15,128426,FALSE,0.813,0.433,7,-11.038,1,0.0284,0.0231,0.613,0.091,0.907,96.024,4,kids
+108927,76A0fsNkEToPHjjmrFsc4Y,Reijo Taipale,Amado Mio,Rakkauden satu,18,178826,FALSE,0.41,0.607,7,-6.66,0,0.0505,0.728,4.80E-06,0.121,0.481,87.179,4,tango
+28389,0SGC6p2Vl7AYKYWtbV1jIG,Man Cub;JEN,Impressions,Good Enough,51,212500,FALSE,0.48,0.713,4,-5.41,1,0.0497,0.00291,0,0.385,0.235,140.08,4,dub
 79936,2JAUBPBVkimRLc5BGhAkfJ,Regina Spektor,Begin to Hope,Samson,56,189506,FALSE,0.49,0.193,11,-9.544,1,0.0421,0.862,9.74E-06,0.113,0.184,89.154,4,piano
 79130,341863z079BT4EFPiSw9DP,Regina Spektor,The Call,The Call,61,187426,FALSE,0.58,0.101,10,-15.661,1,0.0289,0.934,0.000302,0.0768,0.302,91.003,3,piano
 79145,2n0U2OG5d6TuW5mKx7YrC0,Regina Spektor,Far,Two Birds,73,195840,FALSE,0.546,0.5,0,-8.881,1,0.0379,0.802,0.00108,0.107,0.449,150.92,4,piano

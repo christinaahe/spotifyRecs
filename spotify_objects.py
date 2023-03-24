@@ -1,5 +1,6 @@
 import pprint
 
+
 class Song:
     def __init__(self, id, song_info, song_keys):
         self.id = id
@@ -12,7 +13,6 @@ class Song:
         sim_components = [key_weights[i] if self.threshold_bool(thresholds[i], info[i], other_info[i])
                           else (-1 * key_weights[i]) for i in range(len(key_weights)) if key_names[i] not in
                           cat_cols]
-        #print(sim_components)
         return sum(sim_components)
 
     @staticmethod
