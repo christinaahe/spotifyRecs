@@ -10,6 +10,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/edges.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/pre_sample.csv">
           <value>
             <Attribute>

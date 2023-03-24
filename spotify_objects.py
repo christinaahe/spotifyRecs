@@ -1,17 +1,29 @@
-
+import pprint
 
 class Song:
-    def __init__(self, song_info, song_keys):
+    def __init__(self, id, song_info, song_keys):
+        self.id = id
         self.info = {song_keys[i]: song_info[i] for i in range(len(song_info))}
 
-    def find_sim_score(self, other, key_weights, thresholds):
-        other_info = other.info.values().to_list()
-        info = self.info.values().to_list()
-        sim_components = [key_weights[i] if self.threshold_bool(thresholds[i], info[i], other_info[i])
-                          else 0 for i in range(len(key_weights))]
+    def find_sim_score(self, other, key_weights, thresholds, cat_cols):
+        other_info = list(other.info.values())
+        info = list(self.info.values())
+        key_names = list(self.info.keys())
+        sim_components = []
+        for i in range(len(key_weights)):
+            if key_names[i] not in cat_cols:
+                if self.threshold_bool(thresholds[i], info[i], other_info[i]):
+                    sim_components.append(key_weights[i])
+                else:
+                    sim_components.append(key_weights[i] * -1)
+
+        #sim_components = [key_weights[i] if self.threshold_bool(thresholds[i], info[i], other_info[i])
+        #                  else (-1 * key_weights[i]) for i in range(len(key_weights)) if key_names[i] not in
+        #                  cat_cols]
+        #print(sim_components)
         return sum(sim_components)
 
     @staticmethod
     def threshold_bool(threshold, compare_a, compare_b):
-        return (compare_a - threshold) <= compare_b <= (compare_a + threshold)
+        return (float(compare_a) - threshold) <= float(compare_b) <= (float(compare_a) + threshold)
 
