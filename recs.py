@@ -5,6 +5,7 @@ import os
 from spotify_objects import Song
 import pandas as pd
 import csv
+import time
 
 categorical_col = ['track_id', 'artists', 'album_name', 'track_name', 'explicit', 'key', 'mode', 'time_signature',
                    'track_genre']
@@ -12,22 +13,23 @@ cols = ["track_id", "artists", "album_name", "track_name", "popularity", "durati
         "danceability", "energy", "key", "loudness", "mode", "speechiness", "acousticness", "instrumentalness",
         "liveness", "valence", "tempo", "time_signature", "track_genre"]
 
-key_weights = [1] * (len(cols) - 1)
-thresholds = [.5] * (len(cols) - 1)
+key_weights = [0, 0, 0, 3, 1.5, 0, 6, 5, 0, 4, 0, 4.5, 7, 5, 3, 2, 4, 0, 0]
+#thresholds = [.5] * (len(cols) - 1)
 
 
-def write_sim_score(writer, row, row_outter):
+def write_sim_score(writer, row, row_outter, min_score):
     if row.equals(row_outter):
         return
     #song = Song(row[0], row[1:], cols)
     song = Song(row[0], row[1:], row[1:].keys())
     song_outter = Song(row_outter[0], row_outter[1:], cols)
     score = song.find_sim_score(song_outter, key_weights, thresholds, categorical_col)
-    writer.writerow([str(song.id), str(song_outter.id), str(score)])
+    if score >= min_score:
+        writer.writerow([str(song.id), str(song_outter.id), str(score)])
 
 
 def apply_sim_score(writer, row_outter, df):
-    df.apply(lambda row: write_sim_score(writer, row_outter, row), axis=1)
+    df.apply(lambda row: write_sim_score(writer, row_outter, row, 0), axis=1)
 
 
 def make_edge_csv(node_file):
@@ -39,6 +41,28 @@ def make_edge_csv(node_file):
         writer.writerow(header)
         df.apply(lambda row: apply_sim_score(writer, row, df), axis=1)
 
+def other_make_edge(df, min_score, thresholds):
+    #df = pd.read_csv(node_file)
+    df[df.columns[0]]
+    with open('edges.csv', 'w') as infile:
+        writer = csv.writer(infile)
+        header = ['to', 'from', 'sim_score']
+        writer.writerow(header)
+        for row_outter in df.itertuples():
+            for row in df.itertuples():
+                if row_outter == row:
+                    continue
+                song = Song(row[1], row[1:], df.columns)
+                song_outter = Song(row_outter[1], row_outter[1:], df.columns)
+                score = song.find_sim_score(song_outter, key_weights, thresholds, categorical_col)
+                if score >= min_score:
+                    writer.writerow([str(song.id), str(song_outter.id), str(score)])
+
+
+
+def get_thresholds(node_df):
+    thresholds = [node_df[col].std() if col not in categorical_col else 0 for col in node_df.columns[1:]]
+    return [elem * .5 for elem in thresholds]
 
 def egrep_exp(artist, song):
     return "(.*,.*," + artist + ",.*," + song + ",.*)"
@@ -57,7 +81,7 @@ def extract_songs(songs, artists):
     cmd = "egrep '" + regex + "' spotify.csv | sort -t, -k3,3 -k5,5 -u > songs.csv"
     subprocess.check_output(cmd, shell=True)
 
-    sample_cmd = 'shuf -n 10 pre_sample.csv > sample.csv'
+    sample_cmd = 'shuf -n 5000 pre_sample.csv > sample.csv'
     subprocess.check_output(sample_cmd, shell=True)
 
     header_cmd = "head -1 spotify.csv > head.csv"
@@ -111,9 +135,21 @@ def main():
     songs = ['The Call', "Two Birds", "Samson"]
     artists = ['Regina Spektor'] * len(songs)
     extract_songs(songs, artists)
+    node_df = pd.read_csv('combo_sample.csv')
+    del node_df[node_df.columns[0]]
+
+
+
+    thresholds = get_thresholds(node_df)
 
     #df = pd.read_csv('spotify.csv')
-    make_edge_csv('combo_sample.csv')
+    #start = time.time()
+    #make_edge_csv('combo_sample.csv')
+    #print(time.time() - start)
+    print('---------------')
+    start = time.time()
+    other_make_edge(node_df, 5, thresholds)
+    print(time.time() - start)
     #print(df.describe(include='all'))
     # with open('password.txt') as infile:
     #     password = infile.readline().strip()
