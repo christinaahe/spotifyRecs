@@ -9,17 +9,9 @@ class Song:
         other_info = list(other.info.values())
         info = list(self.info.values())
         key_names = list(self.info.keys())
-        sim_components = []
-        for i in range(len(key_weights)):
-            if key_names[i] not in cat_cols:
-                if self.threshold_bool(thresholds[i], info[i], other_info[i]):
-                    sim_components.append(key_weights[i])
-                else:
-                    sim_components.append(key_weights[i] * -1)
-
-        #sim_components = [key_weights[i] if self.threshold_bool(thresholds[i], info[i], other_info[i])
-        #                  else (-1 * key_weights[i]) for i in range(len(key_weights)) if key_names[i] not in
-        #                  cat_cols]
+        sim_components = [key_weights[i] if self.threshold_bool(thresholds[i], info[i], other_info[i])
+                          else (-1 * key_weights[i]) for i in range(len(key_weights)) if key_names[i] not in
+                          cat_cols]
         #print(sim_components)
         return sum(sim_components)
 
