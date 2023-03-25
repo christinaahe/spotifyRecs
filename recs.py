@@ -65,7 +65,6 @@ def other_make_edge(df, min_score, thresholds):
                 #print(song_df.columns)
                 song_df.sort_values('sim_score', ascending=False, inplace=True, axis=0)
                 songs = song_df.head(30).values
-                print(songs)
                 writer.writerows(songs)
 
 
@@ -90,7 +89,7 @@ def extract_songs(songs, artists):
     cmd = "egrep '" + regex + "' spotify.csv | sort -t, -k3,3 -k5,5 -u > songs.csv"
     subprocess.check_output(cmd, shell=True)
 
-    sample_cmd = 'shuf -n 10 pre_sample.csv > sample.csv'
+    sample_cmd = 'shuf -n 5000 pre_sample.csv > sample.csv'
     subprocess.check_output(sample_cmd, shell=True)
 
     header_cmd = "head -1 spotify.csv > head.csv"
