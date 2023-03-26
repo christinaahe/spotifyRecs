@@ -7,16 +7,20 @@ import pandas as pd
 import csv
 import time
 
+# categorical columns (song characteristics) for songs stored in the spotify.csv file
 categorical_col = ['track_id', 'artists', 'album_name', 'track_name', 'explicit', 'key', 'mode', 'time_signature',
                    'track_genre']
+
+# all columns (song characteristics) for songs stored in the spotify.csv file
 cols = ["track_id", "artists", "album_name", "track_name", "popularity", "duration_ms", "explicit",
         "danceability", "energy", "key", "loudness", "mode", "speechiness", "acousticness", "instrumentalness",
         "liveness", "valence", "tempo", "time_signature", "track_genre"]
 
+# weighst associated with songs characteristics used to calculate similarity score
 key_weights = [0, 0, 0, 3, 1.5, 0, 6, 5, 0, 4, 0, 4.5, 7, 5, 3, 2, 4, 0, 0]
 #thresholds = [.5] * (len(cols) - 1)
 
-
+# function that calculates similarity score between two songs
 def write_sim_score(writer, row, row_outter, min_score):
     if row.equals(row_outter):
         return
@@ -27,11 +31,11 @@ def write_sim_score(writer, row, row_outter, min_score):
     if score >= min_score:
         writer.writerow([str(song.id), str(song_outter.id), str(score)])
 
-
+# helper function that applies the write_sim_score function
 def apply_sim_score(writer, row_outter, df):
     df.apply(lambda row: write_sim_score(writer, row_outter, row, 0), axis=1)
 
-
+# creates csv file that stored edges (relationship) data between songs (nodes); uploaded to neo4j
 def make_edge_csv(node_file):
     df = pd.read_csv(node_file)
     del df[df.columns[0]]
@@ -41,6 +45,7 @@ def make_edge_csv(node_file):
         writer.writerow(header)
         df.apply(lambda row: apply_sim_score(writer, row, df), axis=1)
 
+# creates edge between two songs depending on the similarity score
 def other_make_edge(df, min_score, thresholds):
     #df = pd.read_csv(node_file)
     df[df.columns[0]]
@@ -67,7 +72,7 @@ def other_make_edge(df, min_score, thresholds):
                 songs = song_df.head(30).values
                 writer.writerows(songs)
 
-
+# applies specific threshold utilized to calculate similarity score 
 def get_thresholds(node_df):
     thresholds = [node_df[col].std() if col not in categorical_col else 0 for col in node_df.columns[1:]]
     return [elem * .5 for elem in thresholds]
@@ -79,7 +84,7 @@ def egrep_exp(artist, song):
 def full_egrep_exp(artists, songs):
     return "|".join([egrep_exp(artists[i], songs[i]) for i in range(len(artists))])
 
-
+# creates sample set of songs utilizing terminal commands
 def extract_songs(songs, artists):
     subprocess.check_output('rm -f pre_sample.csv', shell=True)
     regex = full_egrep_exp(artists, songs)
@@ -103,10 +108,6 @@ def extract_songs(songs, artists):
     subprocess.check_output('rm -f songs.csv', shell=True)
     subprocess.check_output('rm -f head.csv', shell=True)
     subprocess.check_output('rm -f final.csv', shell=True)
-
-
-
-
 
     #header_cmd = 'sed -i -e' + '1itrack_id,artists,album_name,track_name,popularity,duration_ms,explicit,danceability,energy,key,loudness,mode,speechiness,acousticness,instrumentalness,liveness,valence,tempo,time_signature,track_genre\\\\' + ' combo_sample.csv'
     #subprocess.check_output(header_cmd, shell=True)

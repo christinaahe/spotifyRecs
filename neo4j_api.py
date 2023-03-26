@@ -2,6 +2,8 @@ from neo4j import GraphDatabase
 import random
 with open('password.txt') as infile:
     PASS = infile.readline().strip()
+
+# Neo4J API used to upload results from our song recommendation engine
 class neo4jAPI:
     def __init__(self, user='neo4j', password=PASS, port="bolt://localhost:7687"):
         self.driver = GraphDatabase.driver(port, auth=(user, password))
@@ -11,6 +13,7 @@ class neo4jAPI:
             res = session.run(cmd)
             return res.data()
 
+    # command called in Neo4J that adds an edge (realtionship)
     def add_edge(self, filename, id, node_label, rel_label, rel_prop):
         """adds relationships to graph
         filename: str, path of file containing columns ['to', 'from', 'sim_score']"""
@@ -21,6 +24,7 @@ class neo4jAPI:
         CREATE (source)-[:""" + rel_label + "{" + rel_prop + ": row.sim_score}]->(target);"
         self.run_cmd(cmd)
 
+    # command called in Neo4J that adds a node (song)
     def add_node(self, filename, node_label, properties):
         """adds nodes to graph
         filename: str, path of file containing node information"""
@@ -46,6 +50,7 @@ class neo4jAPI:
     #     #return [name['r.track_name'] for name in rec_names]
 
 
+    # gets recommendations for a particular song using our recommendation engine
     def get_recs(self, reference_songs, reference_artists, n):
         """gets n recommendations based on reference songs"""
         all = []
