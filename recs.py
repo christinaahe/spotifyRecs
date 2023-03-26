@@ -46,10 +46,10 @@ def other_make_edge(df, min_score, thresholds):
     df[df.columns[0]]
     with open('edges_mini.csv', 'w') as infile:
         writer = csv.writer(infile)
-        header = ['to', 'from', 'sim_score']
+        header = ['to_node', 'from_node', 'sim_score']
         writer.writerow(header)
         for row_outter in df.itertuples():
-            song_df = pd.DataFrame(columns=['to', 'from', 'sim_score'])
+            song_df = pd.DataFrame(columns=['to_node', 'from_node', 'sim_score'])
             for row in df.itertuples():
                 if row_outter == row:
                     continue
@@ -57,7 +57,7 @@ def other_make_edge(df, min_score, thresholds):
                 song_outter = Song(row_outter[1], row_outter[1:], df.columns)
                 score = song.find_sim_score(song_outter, key_weights, thresholds, categorical_col)
                 if score >= min_score:
-                    temp_df = pd.DataFrame([[song.id, song_outter.id, score]], columns=['to', 'from', 'sim_score'])
+                    temp_df = pd.DataFrame([[song.id, song_outter.id, score]], columns=['to_node', 'from_node', 'sim_score'])
                     song_df = pd.concat([song_df, temp_df])
                     #writer.writerow([str(song.id), str(song_outter.id), str(score)])
             if not song_df.empty:
@@ -89,7 +89,7 @@ def extract_songs(songs, artists):
     cmd = "egrep '" + regex + "' spotify.csv | sort -t, -k3,3 -k5,5 -u > songs.csv"
     subprocess.check_output(cmd, shell=True)
 
-    sample_cmd = 'shuf -n 5000 pre_sample.csv > sample.csv'
+    sample_cmd = 'shuf -n 25 pre_sample.csv > sample.csv'
     subprocess.check_output(sample_cmd, shell=True)
 
     header_cmd = "head -1 spotify.csv > head.csv"
