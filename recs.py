@@ -44,7 +44,7 @@ def make_edge_csv(node_file):
 def other_make_edge(df, min_score, thresholds):
     #df = pd.read_csv(node_file)
     df[df.columns[0]]
-    with open('edges_mini.csv', 'w') as infile:
+    with open('edges.csv', 'w') as infile:
         writer = csv.writer(infile)
         header = ['to_node', 'from_node', 'sim_score']
         writer.writerow(header)
@@ -89,7 +89,7 @@ def extract_songs(songs, artists):
     cmd = "egrep '" + regex + "' spotify.csv | sort -t, -k3,3 -k5,5 -u > songs.csv"
     subprocess.check_output(cmd, shell=True)
 
-    sample_cmd = 'shuf -n 25 pre_sample.csv > sample.csv'
+    sample_cmd = 'shuf -n 5000 pre_sample.csv > sample.csv'
     subprocess.check_output(sample_cmd, shell=True)
 
     header_cmd = "head -1 spotify.csv > head.csv"
