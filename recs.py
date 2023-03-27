@@ -1,4 +1,3 @@
-# from neo4j import GraphDatabase
 import subprocess
 import random
 import os
@@ -16,15 +15,13 @@ cols = ["track_id", "artists", "album_name", "track_name", "popularity", "durati
         "danceability", "energy", "key", "loudness", "mode", "speechiness", "acousticness", "instrumentalness",
         "liveness", "valence", "tempo", "time_signature", "track_genre"]
 
-# weighst associated with songs characteristics used to calculate similarity score
+# weights associated with songs characteristics used to calculate similarity score
 key_weights = [0, 0, 0, 3, 1.5, 0, 6, 5, 0, 4, 0, 4.5, 7, 5, 3, 2, 4, 0, 0]
-#thresholds = [.5] * (len(cols) - 1)
 
 # function that calculates similarity score between two songs
 def write_sim_score(writer, row, row_outter, min_score):
     if row.equals(row_outter):
         return
-    #song = Song(row[0], row[1:], cols)
     song = Song(row[0], row[1:], row[1:].keys())
     song_outter = Song(row_outter[0], row_outter[1:], cols)
     score = song.find_sim_score(song_outter, key_weights, thresholds, categorical_col)
@@ -47,10 +44,11 @@ def make_edge_csv(node_file):
 
 # creates edge between two songs depending on the similarity score
 def other_make_edge(df, min_score, thresholds):
-    #df = pd.read_csv(node_file)
     df[df.columns[0]]
+    # writing rows into the edges csv file
     with open('edges.csv', 'w') as infile:
         writer = csv.writer(infile)
+        # creating header 
         header = ['to_node', 'from_node', 'sim_score']
         writer.writerow(header)
         for row_outter in df.itertuples():
@@ -58,16 +56,17 @@ def other_make_edge(df, min_score, thresholds):
             for row in df.itertuples():
                 if row_outter == row:
                     continue
+                # setting to_node and from_node songs
                 song = Song(row[1], row[1:], df.columns)
                 song_outter = Song(row_outter[1], row_outter[1:], df.columns)
+                # setting sim_score value 
                 score = song.find_sim_score(song_outter, key_weights, thresholds, categorical_col)
+                # adding song to song_df if the score is greater than the current min similarity score fdfdghjsfdgshj
                 if score >= min_score:
                     temp_df = pd.DataFrame([[song.id, song_outter.id, score]], columns=['to_node', 'from_node', 'sim_score'])
                     song_df = pd.concat([song_df, temp_df])
-                    #writer.writerow([str(song.id), str(song_outter.id), str(score)])
+            # getting top 30 most similar songs per specific song and adding it to edges.csv file
             if not song_df.empty:
-                #print(song_df.head(5))
-                #print(song_df.columns)
                 song_df.sort_values('sim_score', ascending=False, inplace=True, axis=0)
                 songs = song_df.head(30).values
                 writer.writerows(songs)
@@ -77,16 +76,20 @@ def get_thresholds(node_df):
     thresholds = [node_df[col].std() if col not in categorical_col else 0 for col in node_df.columns[1:]]
     return [elem * .5 for elem in thresholds]
 
+# expression for getting one song
 def egrep_exp(artist, song):
     return "(.*,.*," + artist + ",.*," + song + ",.*)"
 
-
+# expression for getting all regina spektor songs
 def full_egrep_exp(artists, songs):
     return "|".join([egrep_exp(artists[i], songs[i]) for i in range(len(artists))])
 
 # creates sample set of songs utilizing terminal commands
 def extract_songs(songs, artists):
+    # removes temporary pre_sample.csv file
     subprocess.check_output('rm -f pre_sample.csv', shell=True)
+
+    # extracts 3 Regina Spektor songs from the large dataset 
     regex = full_egrep_exp(artists, songs)
     cmd = "tail -n +2 spotify.csv | egrep -v '" + regex + "' | sort -t, -k3,3 -k5,5 -u > pre_sample.csv"
     subprocess.check_output(cmd, shell=True)
@@ -94,9 +97,11 @@ def extract_songs(songs, artists):
     cmd = "egrep '" + regex + "' spotify.csv | sort -t, -k3,3 -k5,5 -u > songs.csv"
     subprocess.check_output(cmd, shell=True)
 
+    # randomly selects 5000 songs from the large dataset and adds it to the file that the regina spektor songs are in
     sample_cmd = 'shuf -n 5000 pre_sample.csv > sample.csv'
     subprocess.check_output(sample_cmd, shell=True)
 
+    # adds header back into songs csv file
     header_cmd = "head -1 spotify.csv > head.csv"
     subprocess.check_output(header_cmd, shell=True)
 
@@ -109,8 +114,6 @@ def extract_songs(songs, artists):
     subprocess.check_output('rm -f head.csv', shell=True)
     subprocess.check_output('rm -f final.csv', shell=True)
 
-    #header_cmd = 'sed -i -e' + '1itrack_id,artists,album_name,track_name,popularity,duration_ms,explicit,danceability,energy,key,loudness,mode,speechiness,acousticness,instrumentalness,liveness,valence,tempo,time_signature,track_genre\\\\' + ' combo_sample.csv'
-    #subprocess.check_output(header_cmd, shell=True)
 
 
 def _count_gen(reader):
@@ -159,15 +162,6 @@ def main():
     start = time.time()
     other_make_edge(node_df, 0, thresholds)
     print(time.time() - start)
-    #print(df.describe(include='all'))
-    # with open('password.txt') as infile:
-    #     password = infile.readline().strip()
-    # driver = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", password))
-    #
-    # with driver.session() as session:
-    #     result = session.run("MATCH (n) RETURN n LIMIT 10")
-    #     for record in result:
-    #         print(record)
 
 
 if __name__ == '__main__':
