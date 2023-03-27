@@ -141,7 +141,7 @@ def raw_gen_count(filename):
 
 
 def main():
-    songs = ['The Call', "Two Birds", "Samson"]
+    songs = ['The Call', "Two Birds", "Sampson"]
     artists = ['Regina Spektor'] * len(songs)
     extract_songs(songs, artists)
     node_df = pd.read_csv('combo_sample.csv')
